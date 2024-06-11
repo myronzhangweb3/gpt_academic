@@ -1,4 +1,5 @@
 import os, json;
+from collections import Counter
 
 from core_functional import get_groups_functions
 
@@ -57,6 +58,9 @@ def main():
     from core_functional import get_core_functions
     functional = get_core_functions()
     groups = get_groups_functions()
+
+    counter = Counter(functional[k]['Group'] for k in functional)
+    groups_dict = dict(counter)
 
     # 高级函数插件
     from crazy_functional import get_crazy_functions
@@ -140,9 +144,10 @@ def main():
                         return buttons
 
                     with gr.Row():
-                        group1_buttons = create_button_group("行业分析")
-                        group2_buttons = create_button_group("Group2")
-                        group3_buttons = create_button_group("Group3")
+                        group_btns = []
+                        for k in groups_dict:
+                            btn = create_button_group(k)
+                            group_btns.append(btn)
 
                 with gr.Accordion("函数插件区", open=True, elem_id="plugin-panel") as area_crazy_fn:
                     with gr.Row():
@@ -242,37 +247,28 @@ def main():
             return [*btn_list]
 
         def show_group(group_name):
-            groups = {
-                "行业分析": 4, "Group2":1, "Group3":1
-            }
-            # groups = ["","行业分析", "Group2", "Group3"]
             visibility = []
-            for k in groups:
+            for k in groups_dict:
                 if k == group_name:
-                    visibility.extend([gr.update(visible=True)] * groups[k])
+                    visibility.extend([gr.update(visible=True)] * groups_dict[k])
                 else:
-                    visibility.extend([gr.update(visible=False)] * groups[k])
+                    visibility.extend([gr.update(visible=False)] * groups_dict[k])
             return visibility
 
             # 绑定显示组按钮点击事件
 
         # 基础功能区的回调函数注册
         for k in predefined_btns:
-            # click_handle = functional[k]["Button"].click(lambda: show_group("行业分析"), None,group1_buttons + group2_buttons)
-            click_handle = predefined_btns[k].click(lambda k=k: show_group(k), None, group1_buttons + group2_buttons + group3_buttons)
+            btns = [item for sublist in group_btns for item in sublist]
+            click_handle = predefined_btns[k].click(lambda k=k: show_group(k), None, btns)
             cancel_handles.append(click_handle)
         for btn in customize_btns.values():
             click_handle = btn.click(fn=ArgsGeneralWrapper(predict), inputs=[*input_combo, gr.State(True), gr.State(btn.value)], outputs=output_combo)
             cancel_handles.append(click_handle)
-        for btn in group1_buttons:
-            click_handle = btn.click(fn=ArgsGeneralWrapper(predict), inputs=[*input_combo, gr.State(True), gr.State(btn.value)], outputs=output_combo)
-            cancel_handles.append(click_handle)
-        for btn in group2_buttons:
-            click_handle = btn.click(fn=ArgsGeneralWrapper(predict), inputs=[*input_combo, gr.State(True), gr.State(btn.value)], outputs=output_combo)
-            cancel_handles.append(click_handle)
-        for btn in group3_buttons:
-            click_handle = btn.click(fn=ArgsGeneralWrapper(predict), inputs=[*input_combo, gr.State(True), gr.State(btn.value)], outputs=output_combo)
-            cancel_handles.append(click_handle)
+        for btn in group_btns:
+            for e in btn:
+                click_handle = e.click(fn=ArgsGeneralWrapper(predict), inputs=[*input_combo, gr.State(True), gr.State(e.value)], outputs=output_combo)
+                cancel_handles.append(click_handle)
         # 文件上传区，接收文件后与chatbot的互动
         file_upload.upload(on_file_uploaded, [file_upload, chatbot, txt, txt2, checkboxes, cookies], [chatbot, txt, txt2, cookies]).then(None, None, None,   _js=r"()=>{toast_push('上传完毕 ...'); cancel_loading_status();}")
         file_upload_2.upload(on_file_uploaded, [file_upload_2, chatbot, txt, txt2, checkboxes, cookies], [chatbot, txt, txt2, cookies]).then(None, None, None, _js=r"()=>{toast_push('上传完毕 ...'); cancel_loading_status();}")

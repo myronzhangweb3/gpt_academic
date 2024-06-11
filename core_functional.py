@@ -15,10 +15,7 @@ def get_core_functions():
             #      这里填一个提示词字符串就行了，这里为了区分中英文情景搞复杂了一点
             "Prefix":   build_gpt_academic_masked_string_langbased(
                             text_show_english=
-                                r"Below is a paragraph from an academic paper. Polish the writing to meet the academic style, "
-                                r"improve the spelling, grammar, clarity, concision and overall readability. When necessary, rewrite the whole sentence. "
-                                r"Firstly, you should provide the polished paragraph. "
-                                r"Secondly, you should list all your modification and explain the reasons to do so in markdown table.",
+                                r"行业分析1",
                             text_show_chinese=
                                 r"作为一名中文学术论文写作改进助理，你的任务是改进所提供文本的拼写、语法、清晰、简洁和整体可读性，"
                                 r"同时分解长句，减少重复，并提供改进建议。请先提供文本的更正版本，然后在markdown表格中列出修改的内容，并给出修改的理由:"
@@ -47,45 +44,14 @@ def get_core_functions():
                 # dedent() 函数用于去除多行字符串的缩进
                 dedent("\n\n"+r'''
                     """
-
-                    使用mermaid flowchart对以上文本进行总结，概括上述段落的内容以及内在逻辑关系，例如：
-
-                    以下是对以上文本的总结，以mermaid flowchart的形式展示：
-                    ```mermaid
-                    flowchart LR
-                        A["节点名1"] --> B("节点名2")
-                        B --> C{"节点名3"}
-                        C --> D["节点名4"]
-                        C --> |"箭头名1"| E["节点名5"]
-                        C --> |"箭头名2"| F["节点名6"]
-                    ```
-
-                    注意：
-                    （1）使用中文
-                    （2）节点名字使用引号包裹，如["Laptop"]
-                    （3）`|` 和 `"`之间不要存在空格
-                    （4）根据情况选择flowchart LR（从左到右）或者flowchart TD（从上到下）
+                    Group2Imp1
                 '''),
             "Group": "Group2",
         },
 
 
         "行业分析2": {
-            "Prefix":   r"Help me ensure that the grammar and the spelling is correct. "
-                        r"Do not try to polish the text, if no mistake is found, tell me that this paragraph is good. "
-                        r"If you find grammar or spelling mistakes, please list mistakes you find in a two-column markdown table, "
-                        r"put the original text the first column, "
-                        r"put the corrected text in the second column and highlight the key words you fixed. "
-                        r"Finally, please provide the proofreaded text.""\n\n"
-                        r"Example:""\n"
-                        r"Paragraph: How is you? Do you knows what is it?""\n"
-                        r"| Original sentence | Corrected sentence |""\n"
-                        r"| :--- | :--- |""\n"
-                        r"| How **is** you? | How **are** you? |""\n"
-                        r"| Do you **knows** what **is** **it**? | Do you **know** what **it** **is** ? |""\n\n"
-                        r"Below is a paragraph from an academic paper. "
-                        r"You need to report all grammar and spelling mistakes as the example before."
-                        + "\n\n",
+            "Prefix":   r"行业分析2",
             "Suffix":   r"",
             "PreProcess": clear_line_break,    # 预处理：清除换行符
             "Group": "行业分析",
@@ -93,7 +59,7 @@ def get_core_functions():
 
 
         "行业分析3": {
-            "Prefix":   r"Please translate following sentence to English:" + "\n\n",
+            "Prefix":   r"行业分析3" + "\n\n",
             "Suffix":   r"",
             "Group": "行业分析",
         },
@@ -102,14 +68,7 @@ def get_core_functions():
         "行业分析4": {
             "Prefix":   build_gpt_academic_masked_string_langbased(
                             text_show_chinese=
-                                r"I want you to act as a scientific English-Chinese translator, "
-                                r"I will provide you with some paragraphs in one language "
-                                r"and your task is to accurately and academically translate the paragraphs only into the other language. "
-                                r"Do not repeat the original provided paragraphs after translation. "
-                                r"You should use artificial intelligence tools, "
-                                r"such as natural language processing, and rhetorical knowledge "
-                                r"and experience about effective writing techniques to reply. "
-                                r"I'll give you my paragraphs as follows, tell me what language it is written in, and then translate:",
+                                r"行业分析4:",
                             text_show_english=
                                 r"你是经验丰富的翻译，请把以下学术文章段落翻译成中文，"
                                 r"并同时充分考虑中文的语法、清晰、简洁和整体可读性，"
@@ -121,7 +80,15 @@ def get_core_functions():
         },
 
         "Group3Impl1": {
-            "Prefix":   r"请解释以下代码：" + "\n```\n",
+            "Prefix":   r"Group3Impl1：" + "\n```\n",
+            "Suffix":   "\n```\n",
+            "Group": "Group3",
+        },
+
+
+
+        "Group3Impl2": {
+            "Prefix":   r"Group3Impl2：" + "\n```\n",
             "Suffix":   "\n```\n",
             "Group": "Group3",
         },
